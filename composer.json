@@ -13,9 +13,9 @@
     ],
     "autoload": {
         "psr-0": {
-            "Propel\\Generator\\Behavior\\LuceneSearchBehavior" : "/src/LuceneSearchBehavior.php",
-            "Propel\\Generator\\Behavior\\LuceneSearchBehavior\\LuceneSearchBehaviorObjectBuilderModifier" : "/src/LuceneSearchBehaviorObjectBuilderModifier.php",
-            "Propel\\Generator\\Behavior\\LuceneSearchBehavior\\LuceneSearchBehaviorQueryBuilderModifier" : "/src/LuceneSearchBehaviorQueryBuilderModifier.php"
+            "RSWebDev\\Propel\\Generator\\Behavior\\LuceneSearchBehavior" : "/src/LuceneSearchBehavior.php",
+            "RSWebDev\\Propel\\Generator\\Behavior\\LuceneSearchBehavior\\LuceneSearchBehaviorObjectBuilderModifier" : "/src/LuceneSearchBehaviorObjectBuilderModifier.php",
+            "RSWebDev\\Propel\\Generator\\Behavior\\LuceneSearchBehavior\\LuceneSearchBehaviorQueryBuilderModifier" : "/src/LuceneSearchBehaviorQueryBuilderModifier.php"
         }
     },
     "require": {
@@ -25,6 +25,6 @@
     },
     "extra": {
         "name": "lucene_search",
-        "class": "\\Propel\\Generator\\Behavior\\LuceneSearchBehavior"
+        "class": "\\RSWebDev\\Propel\\Generator\\Behavior\\LuceneSearchBehavior"
     }
 }

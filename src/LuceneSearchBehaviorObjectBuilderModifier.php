@@ -1,7 +1,7 @@
 <?php
-namespace Propel\Generator\Behavior\LuceneSearchBehavior;
+namespace RSWebDev\Propel\Generator\Behavior\LuceneSearchBehavior;
 
-use Propel\Generator\Behavior\LuceneSearchBehavior;
+use RSWebDev\Propel\Generator\Behavior\LuceneSearchBehavior;
 use Propel\Generator\Model\Column;
 
 class LuceneSearchBehaviorObjectBuilderModifier {

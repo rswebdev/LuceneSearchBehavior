@@ -1,8 +1,8 @@
 <?php
-namespace Propel\Generator\Behavior;
+namespace RSWebDev\Propel\Generator\Behavior;
 
-use Propel\Generator\Behavior\LuceneSearchBehavior\LuceneSearchBehaviorObjectBuilderModifier;
-use Propel\Generator\Behavior\LuceneSearchBehavior\LuceneSearchBehaviorQueryBuilderModifier;
+use RSWebDev\Propel\Generator\Behavior\LuceneSearchBehavior\LuceneSearchBehaviorObjectBuilderModifier;
+use RSWebDev\Propel\Generator\Behavior\LuceneSearchBehavior\LuceneSearchBehaviorQueryBuilderModifier;
 use Propel\Generator\Model\Behavior;
 
 class LuceneSearchBehavior extends Behavior {
