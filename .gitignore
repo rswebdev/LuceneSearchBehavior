@@ -44,6 +44,6 @@ Temporary Items
 .apdisk
 
 *.phar
-.idea
+.idea/
 composer.lock
-vendor
+vendor/
