@@ -1,5 +1,5 @@
 {
-    "name": "rob2207/LuceneSearchBehavior",
+    "name": "rswebdev/lucene-search-behavior",
     "description": "Adds Lucene Search to Propel",
     "minimum-stability": "stable",
     "license": "proprietary",
