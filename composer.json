@@ -1,0 +1,28 @@
+{
+    "name": "rob2207/LuceneSearchBehavior",
+    "description": "Adds Lucene Search to Propel",
+    "minimum-stability": "stable",
+    "license": "proprietary",
+    "type": "propel-behavior",
+    "keywords": ["Lucene", "fulltext", "Propel"],
+    "authors": [
+        {
+            "name": "Robert Schmidt",
+            "email": "robert@rswebdev.de"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Propel\\Generator\\Behavior\\LuceneSearchBehavior" : "src/"
+        }
+    },
+    "require": {
+        "php": ">= 5.3",
+        "zendframework/zendsearch": "dev-master",
+        "propel/propel": "dev-master"
+    },
+    "extra": {
+        "name": "lucene_search",
+        "class": "\\Propel\\Generator\\Behavior\\LuceneSearchBehavior"
+    }
+}
