@@ -75,33 +75,33 @@ foreach (\$index->find(self::TABLE_MAP.':'.\$this->getId()) as \$hit) {
     public function addUpdateLuceneIndex(&$script) {
         $script .= "
 
-/**
- * Updates the Lucene index with current values
- *
- * @return \$this The current object (for fluent API support)
- */
-public function updateLuceneIndex() {
+    /**
+     * Updates the Lucene index with current values
+     *
+     * @return \$this The current object (for fluent API support)
+     */
+    public function updateLuceneIndex() {
 
-    \$index = {$this->queryClassName}::getLuceneIndex();
+        \$index = {$this->queryClassName}::getLuceneIndex();
 
-    // remove existing entries
-    foreach (\$index->find(self::TABLE_MAP . ':' . \$this->getId()) as \$hit) {
-        \$index->delete(\$hit->id);
-        \$index->commit();
-    }
+        // remove existing entries
+        foreach (\$index->find(self::TABLE_MAP . ':' . \$this->getId()) as \$hit) {
+            \$index->delete(\$hit->id);
+            \$index->commit();
+        }
 
-    // don't index expired and non-activated jobs
-    //if (\$this->getIsDeleted()) {
-    //    return \$this;
-    //}
+        // don't index expired and non-activated jobs
+        //if (\$this->getIsDeleted()) {
+        //    return \$this;
+        //}
 
-    \$doc = new \\ZendSearch\\Lucene\\Document();
+        \$doc = new \\ZendSearch\\Lucene\\Document();
 
-    // store job primary key to identify it in the search results
-    \$doc->addField(\\ZendSearch\\Lucene\\Document\\Field::keyword(self::TABLE_MAP, \$this->getId()));
-    \$doc->addField(\\ZendSearch\\Lucene\\Document\\Field::text('elementid', '{$this->objectClassName}-' . \$this->getId()));
+        // store job primary key to identify it in the search results
+        \$doc->addField(\\ZendSearch\\Lucene\\Document\\Field::keyword(self::TABLE_MAP, \$this->getId()));
+        \$doc->addField(\\ZendSearch\\Lucene\\Document\\Field::text('elementid', '{$this->objectClassName}-' . \$this->getId()));
 
-    // index job fields
+        // index job fields
 ";
 
         foreach ($this->columns as $column) {
@@ -109,11 +109,11 @@ public function updateLuceneIndex() {
                 if ($column->getPhpNative() == "string") {
                     if (!$this->behavior->i18n) {
                         $script .= "
-    \$doc->addField(\\ZendSearch\\Lucene\\Document\\Field::text('{$column->getName()}', \$this->get{$column->getPhpName()}(), 'utf-8'));
+        \$doc->addField(\\ZendSearch\\Lucene\\Document\\Field::text('{$column->getName()}', \$this->get{$column->getPhpName()}(), 'utf-8'));
 ";
                     } else {
                         $script .= "
-    \$doc->addField(\\ZendSearch\\Lucene\\Document\\Field::text('{$column->getName()}', \$this->get{$column->getPhpName()}(true), 'utf-8'));
+        \$doc->addField(\\ZendSearch\\Lucene\\Document\\Field::text('{$column->getName()}', \$this->get{$column->getPhpName()}(true), 'utf-8'));
 ";
                     }
                 }
@@ -121,37 +121,37 @@ public function updateLuceneIndex() {
         }
 
         $script .= "
-    // add job to the index
-    \$index->addDocument(\$doc);
-    \$index->commit();
+        // add job to the index
+        \$index->addDocument(\$doc);
+        \$index->commit();
 
-    return \$this;
-}
+        return \$this;
+    }
 ";
     }
 
     public function replaceGetColumn(Column $column, &$script) {
         $newGetColumnMethod = "
 
-/**
- * Get the [%s] column value.
- *
- * @param bool \$allTranslations
- * @return string
- */
-public function get%s(\$allTranslations = false) {
-    if (!\$allTranslations) {
-        return \$this->getCurrentTranslation()->get%s();
-    } else {
-        \$return = '';
-        foreach (\$this->get{$this->objectClassName}I18ns() as \$record_i18n) {
-            if (\$record_i18n instanceof {$this->objectClassName}I18n) {
-                \$return .= \$record_i18n->get%s() . \"\\n\\n\";
+    /**
+     * Get the [%s] column value.
+     *
+     * @param bool \$allTranslations
+     * @return string
+     */
+    public function get%s(\$allTranslations = false) {
+        if (!\$allTranslations) {
+            return \$this->getCurrentTranslation()->get%s();
+        } else {
+            \$return = '';
+            foreach (\$this->get{$this->objectClassName}I18ns() as \$record_i18n) {
+                if (\$record_i18n instanceof {$this->objectClassName}I18n) {
+                    \$return .= \$record_i18n->get%s() . \"\\n\\n\";
+                }
             }
+            return \$return;
         }
-        return \$return;
     }
-}
 ";
         $newGetColumnMethod = sprintf(
             $newGetColumnMethod,
