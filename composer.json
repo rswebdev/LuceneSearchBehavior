@@ -12,11 +12,9 @@
         }
     ],
     "autoload": {
-        "psr-0": {
-            "RSWebDev\\Propel\\Generator\\Behavior\\LuceneSearchBehavior" : "/src/Propel/Generator/Behavior/LuceneSearchBehavior.php",
-            "RSWebDev\\Propel\\Generator\\Behavior\\LuceneSearchBehavior\\LuceneSearchBehaviorObjectBuilderModifier" : "/src/Propel/Generator/Behavior/LuceneSearchBehavior/LuceneSearchBehaviorObjectBuilderModifier.php",
-            "RSWebDev\\Propel\\Generator\\Behavior\\LuceneSearchBehavior\\LuceneSearchBehaviorQueryBuilderModifier" : "/src/Propel/Generator/Behavior/LuceneSearchBehavior/LuceneSearchBehaviorQueryBuilderModifier.php"
-        }
+        "classmap": [
+            "/src"
+        ]
     },
     "require": {
         "php": ">= 5.3",
