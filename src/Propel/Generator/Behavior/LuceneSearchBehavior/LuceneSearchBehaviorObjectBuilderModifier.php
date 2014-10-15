@@ -1,6 +1,7 @@
 <?php
 namespace RSWebDev\Propel\Generator\Behavior\LuceneSearchBehavior;
 
+use Propel\Generator\Util\PhpParser;
 use RSWebDev\Propel\Generator\Behavior\LuceneSearchBehavior;
 use Propel\Generator\Model\Column;
 
@@ -25,6 +26,14 @@ class LuceneSearchBehaviorObjectBuilderModifier {
         $this->queryClassName  = $builder->getQueryClassName(true);
     }
 
+    public function objectFilter(&$script) {
+        if ($this->behavior->i18n) {
+            foreach ($this->columns as $column) {
+                $this->replaceGetColumn($column, $script);
+            }
+        }
+    }
+
     public function objectMethods($builder)
     {
         $script = "";
@@ -40,11 +49,12 @@ class LuceneSearchBehaviorObjectBuilderModifier {
         $this->setBuilder($builder);
 
         return "
-    \$this->updateLuceneIndex();
 
-    \$index = {$this->queryClassName}::getLuceneIndex();
-    \$index->optimize();
-    ";
+\$this->updateLuceneIndex();
+
+\$index = {$this->queryClassName}::getLuceneIndex();
+\$index->optimize();
+";
     }
 
     public function postDelete($builder)
@@ -52,18 +62,24 @@ class LuceneSearchBehaviorObjectBuilderModifier {
         $this->setBuilder($builder);
 
         return "
-    \$index = {$this->queryClassName}::getLuceneIndex();
 
-    foreach (\$index->find(self::TABLE_MAP.':'.\$this->getId()) as \$hit)
-    {
-        \$index->delete(\$hit->id);
-        \$index->optimize();
-    }
-    ";
+\$index = {$this->queryClassName}::getLuceneIndex();
+
+foreach (\$index->find(self::TABLE_MAP.':'.\$this->getId()) as \$hit) {
+    \$index->delete(\$hit->id);
+    \$index->optimize();
+}
+";
     }
 
     public function addUpdateLuceneIndex(&$script) {
         $script .= "
+
+/**
+ * Updates the Lucene index with current values
+ *
+ * @return \$this The current object (for fluent API support)
+ */
 public function updateLuceneIndex() {
 
     \$index = {$this->queryClassName}::getLuceneIndex();
@@ -75,9 +91,9 @@ public function updateLuceneIndex() {
     }
 
     // don't index expired and non-activated jobs
-    if (\$this->getIsDeleted()) {
-        return \$this;
-    }
+    //if (\$this->getIsDeleted()) {
+    //    return \$this;
+    //}
 
     \$doc = new \\ZendSearch\\Lucene\\Document();
 
@@ -86,14 +102,22 @@ public function updateLuceneIndex() {
     \$doc->addField(\\ZendSearch\\Lucene\\Document\\Field::text('elementid', '{$this->objectClassName}-' . \$this->getId()));
 
     // index job fields
-    ";
+";
 
         foreach ($this->columns as $column) {
-            if ($column instanceof Column)
-                if ($column->getPhpNative() == "string")
-                    $script .= "
+            if ($column instanceof Column) {
+                if ($column->getPhpNative() == "string") {
+                    if (!$this->behavior->i18n) {
+                        $script .= "
     \$doc->addField(\\ZendSearch\\Lucene\\Document\\Field::text('{$column->getName()}', \$this->get{$column->getPhpName()}(), 'utf-8'));
-    ";
+";
+                    } else {
+                        $script .= "
+    \$doc->addField(\\ZendSearch\\Lucene\\Document\\Field::text('{$column->getName()}', \$this->get{$column->getPhpName()}(true), 'utf-8'));
+";
+                    }
+                }
+            }
         }
 
         $script .= "
@@ -104,5 +128,41 @@ public function updateLuceneIndex() {
     return \$this;
 }
 ";
+    }
+
+    public function replaceGetColumn(Column $column, &$script) {
+        $newGetColumnMethod = "
+
+/**
+ * Get the [%s] column value.
+ *
+ * @param bool \$allTranslations
+ * @return string
+ */
+public function get%s(\$allTranslations = false) {
+    if (!\$allTranslations) {
+        return \$this->getCurrentTranslation()->get%s();
+    } else {
+        \$return = '';
+        foreach (\$this->get{$this->objectClassName}I18ns() as \$record_i18n) {
+            if (\$record_i18n instanceof {$this->objectClassName}I18n) {
+                \$return .= \$record_i18n->get%s() . \"\\n\\n\";
+            }
+        }
+        return \$return;
+    }
+}
+";
+        $newGetColumnMethod = sprintf(
+            $newGetColumnMethod,
+            $column->getName(),
+            $column->getPhpName(),
+            $column->getPhpName(),
+            $column->getPhpName()
+        );
+
+        $parser = new PhpParser($script, true);
+        $parser->replaceMethod(sprintf('get%s', $column->getPhpName()), $newGetColumnMethod);
+        $script = $parser->getCode();
     }
 }
