@@ -13,7 +13,9 @@
     ],
     "autoload": {
         "psr-0": {
-            "RSWebDev\\" : "/src"
+            "RSWebDev\\Propel\\Generator\\Behavior\\LuceneSearchBehavior" : "/src/Propel/Generator/Behavior/LuceneSearchBehavior.php",
+            "RSWebDev\\Propel\\Generator\\Behavior\\LuceneSearchBehavior\\LuceneSearchBehaviorObjectBuilderModifier" : "/src/Propel/Generator/Behavior/LuceneSearchBehavior/LuceneSearchBehaviorObjectBuilderModifier.php",
+            "RSWebDev\\Propel\\Generator\\Behavior\\LuceneSearchBehavior\\LuceneSearchBehaviorQueryBuilderModifier" : "/src/Propel/Generator/Behavior/LuceneSearchBehavior/LuceneSearchBehaviorQueryBuilderModifier.php"
         }
     },
     "require": {
