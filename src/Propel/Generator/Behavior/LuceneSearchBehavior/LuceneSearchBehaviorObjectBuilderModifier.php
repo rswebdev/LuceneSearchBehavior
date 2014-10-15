@@ -21,7 +21,7 @@ class LuceneSearchBehaviorObjectBuilderModifier {
     protected function setBuilder($builder)
     {
         $this->builder         = $builder;
-        $this->objectClassName = $builder->getObjectClassName(true);
+        $this->objectClassName = trim($builder->getObjectClassName(true),'\\');
         $this->queryClassName  = $builder->getQueryClassName(true);
     }
 
